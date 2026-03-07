@@ -23,7 +23,7 @@ const LoginPage = ({ onLogin, onGoToRegister }) => {
             <IconLeaf />
           </div>
           <h1 className="text-3xl font-black text-emerald-900 tracking-tight">Healthy Munchees</h1>
-          <p className="text-emerald-600 font-medium mt-1">Nyemil Sehat dan Halal, Cukup Satu Aplikasi</p>
+          <p className="text-emerald-600 font-medium mt-1">Nyemil Sehat dan Halal, Cukup di Satu Aplikasi</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
