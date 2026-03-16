@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
+import RegisterPage from './components/Register';
 import POSInput from './components/POSInput';
 import CheckoutSuccess from './components/CheckoutSuccess';
 import './index.css';
@@ -23,6 +24,12 @@ function App() {
                 <Route
                     path="/login"
                     element={!user ? <OnLogin onLogin={handleLogin} /> : <Navigate to="/" />}
+                />
+
+                {/* Halaman Register */}
+                <Route
+                    path="/register"
+                    element={!user ? <RegisterPage onGoToLogin={() => { }} /> : <Navigate to="/" />}
                 />
 
                 {/* Halaman Utama (Kasir) */}

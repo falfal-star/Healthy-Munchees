@@ -1,11 +1,13 @@
 ﻿import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Ikon Leaf (SVG)
 const IconLeaf = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-10 10Z" /><path d="M11 20c-2.33-3.67-3.67-4.33-11-5 4.33-.67 4.67-2 7-11" /></svg>
 );
 
-const LoginPage = ({ onLogin, onGoToRegister }) => {
+const LoginPage = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -28,7 +30,7 @@ const LoginPage = ({ onLogin, onGoToRegister }) => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="text-xs font-bold text-emerald-800 ml-2 mb-1 block uppercase">Email Vendor</label>
+            <label className="text-xs font-bold text-emerald-800 ml-2 mb-1 block uppercase">Email</label>
             <input
               type="email"
               placeholder="halo@healthymunchees.com"
@@ -60,7 +62,7 @@ const LoginPage = ({ onLogin, onGoToRegister }) => {
           </p>
         </div>
 
-        <button onClick={onGoToRegister} className="w-full mt-6 text-sm font-bold text-emerald-600 hover:text-lime-600 transition">Daftar Vendor Baru</button>
+        <button onClick={() => navigate('/register')} className="w-full mt-6 text-sm font-bold text-emerald-600 hover:text-lime-600 transition">Daftarkan Akun</button>
       </div>
     </div>
   );
