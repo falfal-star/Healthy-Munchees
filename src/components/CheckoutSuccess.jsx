@@ -13,8 +13,15 @@ const CheckoutSuccess = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Menangkap data yang dikirim dari POSInput
-    const { total, zakat, subtotal, items } = location.state || { total: 0, zakat: 0, subtotal: 0, items: [] };
+    // Menangkap data yang dikirim dari Payment.jsx
+    const { total, zakat, subtotal, items, shippingData, paymentMethod } = location.state || { 
+        total: 0, 
+        zakat: 0, 
+        subtotal: 0, 
+        items: [],
+        shippingData: null,
+        paymentMethod: null
+    };
 
     return (
         <div className="min-h-screen bg-[#F9FFF7] font-sans flex items-center justify-center p-4">
@@ -60,6 +67,14 @@ const CheckoutSuccess = () => {
                     </div>
 
                     <div className="mt-10 text-center">
+                        <div className="bg-green-50 border border-green-100 rounded-2xl p-4 mb-6 -mt-2">
+                            <p className="text-sm font-bold text-[#059669]">
+                                ✉️ Email Pembayaran Berhasil Terkirim!
+                            </p>
+                            <p className="text-xs text-green-700 mt-1">
+                                Bukti transaksi telah dikirimkan ke <span className="font-bold">{shippingData?.email || 'email Anda'}</span>.
+                            </p>
+                        </div>
                         <p className="text-[10px] text-gray-400 font-medium italic mb-6">
                             "Barakallah, semoga camilan ini membawa keberkahan dan kesehatan untukmu."
                         </p>

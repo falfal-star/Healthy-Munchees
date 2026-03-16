@@ -4,6 +4,8 @@ import Login from './components/Login';
 import RegisterPage from './components/Register';
 import POSInput from './components/POSInput';
 import CheckoutSuccess from './components/CheckoutSuccess';
+import ShippingInfo from './components/ShippingInfo';
+import Payment from './components/Payment';
 import './index.css';
 
 function App() {
@@ -42,6 +44,18 @@ function App() {
                 <Route
                     path="/checkout-success"
                     element={user ? <CheckoutSuccess /> : <Navigate to="/login" />}
+                />
+
+                {/* Halaman Data Pengiriman */}
+                <Route
+                    path="/shipping"
+                    element={user ? <ShippingInfo user={user} /> : <Navigate to="/login" />}
+                />
+
+                {/* Halaman Pilih Pembayaran */}
+                <Route
+                    path="/payment"
+                    element={user ? <Payment /> : <Navigate to="/login" />}
                 />
             </Routes>
         </Router>

@@ -55,8 +55,8 @@ const POSInput = ({ user, onLogout }) => {
   const handleCheckout = () => {
     if (cart.length === 0) return alert("Keranjang masih kosong!");
 
-    // Kirim data belanjaan ke halaman CheckoutSuccess
-    navigate('/checkout-success', {
+    // Kirim data belanjaan ke halaman ShippingInfo
+    navigate('/shipping', {
       state: { total, zakat, subtotal, items: cart }
     });
 
