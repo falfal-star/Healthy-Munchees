@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { supabase } from './supabaseClient';
 import Login from './components/Login';
 import RegisterPage from './components/Register';
 import POSInput from './components/POSInput';
@@ -10,14 +11,30 @@ import './index.css';
 
 function App() {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const handleLogin = (userData) => {
-        setUser(userData);
+    useEffect(() => {
+        // Cek sesi saat ini
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user || null);
+            setLoading(false);
+        });
+
+        // Dengarkan perubahan status auth
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user || null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
     };
 
-    const handleLogout = () => {
-        setUser(null);
-    };
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center bg-[#F9FFF7] font-sans font-bold text-emerald-800">Memuat sesi...</div>;
+    }
 
     return (
         <Router>
@@ -25,7 +42,7 @@ function App() {
                 {/* Halaman Login */}
                 <Route
                     path="/login"
-                    element={!user ? <OnLogin onLogin={handleLogin} /> : <Navigate to="/" />}
+                    element={!user ? <Login /> : <Navigate to="/" />}
                 />
 
                 {/* Halaman Register */}
@@ -61,10 +78,5 @@ function App() {
         </Router>
     );
 }
-
-// Komponen Pembungkus untuk Login (Sesuaikan dengan nama file Login kamu)
-const OnLogin = ({ onLogin }) => {
-    return <Login onLogin={onLogin} />;
-};
 
 export default App;

@@ -1,5 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 // Ikon Leaf (SVG)
 const IconLeaf = () => (
@@ -11,22 +12,43 @@ const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logika login sederhana untuk demo
-    if (onLogin) onLogin({ name: 'Mitra Healthy Munchees', email });
+    setErrorMsg(null);
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+    if (error) {
+       setErrorMsg(error.message);
+    } else {
+       if (onLogin) onLogin(data.user);
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-lime-500 to-emerald-600 font-sans">
       <div className="w-full max-w-md p-10 bg-white shadow-2xl rounded-[2.5rem] border-b-8 border-lime-200">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-lime-100 rounded-3xl mb-4 text-lime-600 rotate-12 shadow-inner">
             <IconLeaf />
           </div>
           <h1 className="text-3xl font-black text-emerald-900 tracking-tight">Healthy Munchees</h1>
           <p className="text-emerald-600 font-medium mt-1">Nyemil Sehat dan Halal, Cukup di Satu Aplikasi</p>
         </div>
+
+        {errorMsg && (
+          <div className="mb-4 bg-red-50 text-red-600 text-sm p-3 rounded-xl border border-red-200">
+            {errorMsg}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
@@ -51,8 +73,12 @@ const LoginPage = ({ onLogin }) => {
               className="w-full p-4 rounded-2xl bg-lime-50 border-2 border-transparent focus:border-lime-400 outline-none transition"
             />
           </div>
-          <button type="submit" className="w-full py-4 bg-emerald-600 text-white font-black rounded-2xl shadow-xl hover:bg-emerald-700 hover:-translate-y-1 transition-all active:scale-95">
-            Masuk Sekarang
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full py-4 bg-emerald-600 text-white font-black rounded-2xl shadow-xl hover:bg-emerald-700 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50"
+          >
+            {loading ? 'Sedang Masuk...' : 'Masuk Sekarang'}
           </button>
         </form>
 

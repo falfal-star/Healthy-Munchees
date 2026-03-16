@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const Payment = () => {
     const location = useLocation();
@@ -23,18 +24,54 @@ const Payment = () => {
         { id: 'ewallet', name: 'E-Wallet', icon: '💳', desc: 'GoPay, OVO, Dana, ShopeePay' }
     ];
 
-    const handlePayment = () => {
+    const handlePayment = async () => {
         if (!selectedMethod) return alert('Silakan pilih metode pembayaran terlebih dahulu');
         
         setIsProcessing(true);
         
-        // Simulasi proses pembayaran selama 2 detik
-        setTimeout(() => {
+        try {
+            // Dapatkan user yang sedang aktif
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+            
+            if (authError || !user) {
+                alert("Sesi Anda telah berakhir, silakan login kembali.");
+                setIsProcessing(false);
+                navigate('/login');
+                return;
+            }
+
+            // Simpan ke Supabase
+            const { error: dbError } = await supabase
+                .from('transactions')
+                .insert([
+                    {
+                        user_id: user.id,
+                        user_email: user.email,
+                        total_amount: total,
+                        items: items
+                    }
+                ]);
+
+            if (dbError) {
+                console.error("Gagal menyimpan transaksi:", dbError);
+                alert("Terjadi kesalahan saat menyimpan transaksi. Coba lagi.");
+                setIsProcessing(false);
+                return;
+            }
+
+            // Simulasi sisa proses pembayaran
+            setTimeout(() => {
+                setIsProcessing(false);
+                navigate('/checkout-success', {
+                    state: { total, zakat, subtotal, items, shippingData, paymentMethod: selectedMethod }
+                });
+            }, 1000);
+
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi kesalahan sistem.");
             setIsProcessing(false);
-            navigate('/checkout-success', {
-                state: { total, zakat, subtotal, items, shippingData, paymentMethod: selectedMethod }
-            });
-        }, 2000);
+        }
     };
 
     return (
