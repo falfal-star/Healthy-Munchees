@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // 1. Tambahkan ini
 
 // Ikon Leaf Asli milik Healthy Munchees
@@ -90,7 +90,7 @@ const POSInput = ({ user, onLogout }) => {
         </nav>
 
         <div className="mt-auto">
-          <p className="text-[10px] text-[#059669] font-bold uppercase mb-1">Vendor: {user?.email || 'MITRA AMANAH'}</p>
+          <p className="text-[10px] text-[#059669] font-bold uppercase mb-1">Akun: {user?.email || 'PELANGGAN'}</p>
           <button onClick={onLogout} className="text-red-500 font-bold text-xs hover:underline">Keluar Sistem</button>
         </div>
       </div>
